@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
@@ -49,6 +50,9 @@ public class BinlogStreamSQL {
         env.setStateBackend(new FsStateBackend("hdfs://ido001:8020/user/lwj/flink/checkpoint"));
 
         StreamTableEnvironment tEnv = TableEnvironment.getTableEnvironment(env);
+        //设置空闲state的保留时间
+        tEnv.queryConfig().withIdleStateRetentionTime(Time.days(10), Time.days(30));
+
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "ido001.gzcb.com:9092,ido002.gzcb.com:9092,ido003.gzcb.com:9092");
         properties.setProperty("group.id", "flink");
