@@ -51,6 +51,12 @@ public class BinlogStreamSQL {
 
         StreamTableEnvironment tEnv = TableEnvironment.getTableEnvironment(env);
         //设置空闲state的保留时间
+        /**
+         * 对这个参数的个人理解：
+         * minTime：如果该key在minTime时间内如果都没有变动的话就清除
+         * maxTime：不管是否该在变动，该key在state中最多保存maxTime的时间
+         * 以上是个人理解，官网对该方法的两个参数有模糊的解释，但是没有进行详细的解释，如有不对麻烦指点
+         */
         tEnv.queryConfig().withIdleStateRetentionTime(Time.days(10), Time.days(30));
 
         Properties properties = new Properties();
